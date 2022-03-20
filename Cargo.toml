@@ -2,7 +2,7 @@
 name = "memory-stats"
 authors = ["Arc-blroth <45273859+Arc-blroth@users.noreply.github.com>"]
 license = "MIT OR Apache-2.0"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 
 [target.'cfg(target_os = "windows")'.dependencies]
