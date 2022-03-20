@@ -4,6 +4,11 @@ authors = ["Arc-blroth <45273859+Arc-blroth@users.noreply.github.com>"]
 license = "MIT OR Apache-2.0"
 version = "1.0.0"
 edition = "2021"
+description = "A cross-platform memory profiler for Rust."
+repository = "https://github.com/Arc-blroth/memory-stats"
+readme = "README.md"
+categories = ["development-tools::profiling"]
+keywords = ["memory", "performance", "profiling"]
 
 [dependencies]
 serde = { version = "1.0", optional = true, features = ["derive"] }
