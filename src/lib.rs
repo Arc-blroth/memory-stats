@@ -14,6 +14,10 @@
 //! memory-stats = "1.0.0"
 //! ```
 //!
+//! ### Optional Features
+//!
+//! `serde`: Enables serialization and deserialization of the [`MemoryStats`] struct.
+//!
 //! ## Example
 //!
 //! Here's an example that prints out the current memory usage:
@@ -37,6 +41,9 @@
 //! [`/proc/self/statm`](https://man7.org/linux/man-pages/man5/proc.5.html#:~:text=by%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20waitpid%282%29.-,/proc/%5Bpid%5D/statm,-Provides%20information%20about)
 //! as a fallback.
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 #[cfg_attr(target_os = "windows", path = "windows.rs")]
 #[cfg_attr(any(target_os = "linux", target_os = "android"), path = "linux.rs")]
 #[cfg_attr(any(target_os = "macos", target_os = "ios"), path = "darwin.rs")]
@@ -57,6 +64,7 @@ mod platform {
 
 /// Statistics on the memory used by the current process.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct MemoryStats {
     /// The "physical" memory used by this process.
     /// This corresponds to the following

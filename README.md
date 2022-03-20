@@ -14,6 +14,10 @@ Add `memory-stats` as a dependency to your `Cargo.toml`:
 memory-stats = "1.0.0"
 ```
 
+### Optional Features
+
+`serde`: Enables serialization and deserialization of the `MemoryStats` struct.
+
 ## Example
 
 Here's an example that prints out the current memory usage:
