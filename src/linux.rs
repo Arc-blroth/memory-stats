@@ -45,10 +45,10 @@ pub fn memory_stats() -> Option<MemoryStats> {
                 let mut total_rss_kb: usize = 0;
 
                 for line in smap_info.lines() {
-                    if line.starts_with("Size:") {
-                        total_size_kb += scan_int(&line[5..]).0;
-                    } else if line.starts_with("Rss:") {
-                        total_rss_kb += scan_int(&line[4..]).0;
+                    if let Some(rest) = line.strip_prefix("Size:") {
+                        total_size_kb += scan_int(rest).0;
+                    } else if let Some(rest) = line.strip_prefix("Rss:") {
+                        total_rss_kb += scan_int(rest).0;
                     }
                 }
 
@@ -92,9 +92,9 @@ fn scan_int(string: &str) -> (usize, usize) {
     while let Some(' ') = chars.next_if_eq(&' ') {
         idx += 1;
     }
-    while let Some(n) = chars.next() {
+    for n in chars {
         idx += 1;
-        if n >= '0' && n <= '9' {
+        if ('0'..='9').contains(&n) {
             out *= 10;
             out += n as usize - '0' as usize;
         } else {
