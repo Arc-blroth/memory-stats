@@ -29,6 +29,10 @@ jobs:
            profile: minimal
            override: true
        
+       - name: Add rustfmt and clippy (nightly only)
+         if: matrix.rust == 'nightly'
+         run: rustup component add rustfmt clippy
+       
        - name: Fetch dependencies
          uses: actions-rs/cargo@v1
          with:
