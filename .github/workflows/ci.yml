@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+   lint:
+     name: Check Lints
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v2
+       - uses: actions-rs/toolchain@v1
+         with:
+           toolchain: nightly
+           profile: minimal
+           override: true
+           components: rustfmt, clippy
+       - uses: actions-rs/cargo@v1
+         with:
+           command: fmt
+           args: --all -- --check
+       - uses: actions-rs/cargo@v1
+         with:
+           command: clippy
+           args: --all-targets -- -D warnings
+
+   test:
+     name: Run All Tests
+     strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        rust: [stable, nightly]
+     runs-on: ${{ matrix.os }}
+     steps:
+       - uses: actions/checkout@v2
+       - uses: actions-rs/toolchain@v1
+         with:
+           toolchain: ${{ matrix.rust }}
+           profile: minimal
+           override: true
+       - uses: actions-rs/cargo@v1
+         with:
+           command: fetch
+       - uses: actions-rs/cargo@v1
+         with:
+           command: build
+           args: --tests
+       - uses: actions-rs/cargo@v1
+         with:
+           command: test
+           args: -- --show-output
