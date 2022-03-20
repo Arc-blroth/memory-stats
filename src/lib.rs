@@ -1,7 +1,7 @@
 #![doc = include_str!("../README.md")]
 
 #[cfg_attr(target_os = "windows", path = "windows.rs")]
-#[cfg_attr(target_os = "linux", path = "linux.rs")]
+#[cfg_attr(any(target_os = "linux", target_os = "android"), path = "linux.rs")]
 #[cfg_attr(any(target_os = "macos", target_os = "ios"), path = "darwin.rs")]
 mod platform;
 
