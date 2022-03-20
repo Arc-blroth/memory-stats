@@ -2,14 +2,15 @@
 
 #[cfg_attr(target_os = "windows", path = "windows.rs")]
 #[cfg_attr(target_os = "linux", path = "linux.rs")]
+#[cfg_attr(any(target_os = "macos", target_os = "ios"), path = "darwin.rs")]
 mod platform;
 
 #[cfg(not(any(
     target_os = "windows",
     target_os = "linux",
     target_os = "android",
-    // target_os = "macos",
-    // target_os = "ios"
+    target_os = "macos",
+    target_os = "ios",
 )))]
 mod platform {
     pub fn memory_stats() -> Option<MemoryStats> {
@@ -38,13 +39,16 @@ pub struct MemoryStats {
 /// Returns a snapshot of the the memory used by the
 /// current process. If the current memory usage
 /// cannot be queried, `None` is returned.
-#[cfg_attr(not(any(
-    target_os = "windows",
-    target_os = "linux",
-    target_os = "android",
-    // target_os = "macos",
-    // target_os = "ios"
-)), deprecated("memory-stats doesn't support this platform!"))]
+#[cfg_attr(
+    not(any(
+        target_os = "windows",
+        target_os = "linux",
+        target_os = "android",
+        target_os = "macos",
+        target_os = "ios",
+    )),
+    deprecated("memory-stats doesn't support this platform!")
+)]
 pub fn memory_stats() -> Option<MemoryStats> {
     platform::memory_stats()
 }
