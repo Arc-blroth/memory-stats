@@ -1,7 +1,7 @@
 # Memory Stats
 
 [![Crates.io](https://img.shields.io/crates/v/memory-stats.svg)](https://crates.io/crates/memory-stats)
-[![License](https://img.shields.io/crates/l/memory-stats.svg)](https://github.com/Arc-blroth/memory-stats)
+[![License](https://img.shields.io/crates/l/memory-stats)](https://github.com/Arc-blroth/memory-stats)
 [![Build Status](https://github.com/Arc-blroth/memory-stats/workflows/CI/badge.svg)](https://github.com/Arc-blroth/memory-stats/actions?query=workflow:"CI")
 ![Dragon Powered](https://img.shields.io/badge/%F0%9F%90%89-dragon%20powered-brightgreen)
 
