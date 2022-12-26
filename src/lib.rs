@@ -40,6 +40,8 @@
 //! if avaliable. However, since support for `/proc/self/smaps` might not be compiled in on all kernels, this crate will also use the faster but less accurate statistics from
 //! [`/proc/self/statm`](https://man7.org/linux/man-pages/man5/proc.5.html#:~:text=by%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20waitpid%282%29.-,/proc/%5Bpid%5D/statm,-Provides%20information%20about)
 //! as a fallback.
+//!
+//! If speed is needed over accuracy, the `always_use_statm` feature can be enabled to always use the `/proc/self/statm` statistics.
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
