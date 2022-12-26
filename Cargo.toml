@@ -2,7 +2,7 @@
 name = "memory-stats"
 authors = ["Arc-blroth <45273859+Arc-blroth@users.noreply.github.com>"]
 license = "MIT OR Apache-2.0"
-version = "1.0.0"
+version = "1.1.0"
 edition = "2021"
 description = "A cross-platform memory profiler for Rust."
 repository = "https://github.com/Arc-blroth/memory-stats"
@@ -18,3 +18,7 @@ winapi = { version = "0.3.9", features = ["minwindef", "processthreadsapi", "psa
 
 [target.'cfg(any(target_os = "linux", target_os = "android", target_os = "macos", target_os = "ios"))'.dependencies]
 libc = "0.2"
+
+[features]
+# Always use the faster but less accurate /proc/self/statm statistics on Linux.
+always_use_statm = []

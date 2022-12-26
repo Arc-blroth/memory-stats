@@ -3,10 +3,13 @@ use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
 use crate::MemoryStats;
 
+#[cfg(not(feature = "always_use_statm"))]
 const SMAPS: &str = "/proc/self/smaps";
 const STATM: &str = "/proc/self/statm";
 
+#[cfg(not(feature = "always_use_statm"))]
 static SMAPS_CHECKED: AtomicBool = AtomicBool::new(false);
+#[cfg(not(feature = "always_use_statm"))]
 static SMAPS_EXIST: AtomicBool = AtomicBool::new(false);
 static PAGE_SIZE: AtomicUsize = AtomicUsize::new(0);
 
@@ -16,25 +19,24 @@ pub fn memory_stats() -> Option<MemoryStats> {
     // kernels. We use the inaccurate /proc/self/statm stats
     // as a fallback in case smaps isn't avaliable.
 
+    #[cfg(feature = "always_use_statm")]
+    load_page_size()?;
+
+    #[cfg(not(feature = "always_use_statm"))]
     if let Ok(false) = SMAPS_CHECKED.compare_exchange(false, true, Ordering::Relaxed, Ordering::Relaxed) {
         let smaps_exist = fs::metadata(SMAPS).is_ok();
 
-        if !smaps_exist && PAGE_SIZE.load(Ordering::Relaxed) == 0 {
-            let page_size = unsafe { libc::sysconf(libc::_SC_PAGESIZE) };
-            if page_size == -1 {
-                // sysconf returned error
-                return None;
-            } else {
-                PAGE_SIZE.store(page_size as usize, Ordering::Relaxed);
-            }
+        if !smaps_exist {
+            load_page_size()?;
         }
 
         // store SMAPS_EXIST last to prevent code from loading a PAGE_SIZE of 0
         SMAPS_EXIST.store(smaps_exist, Ordering::Relaxed);
     }
 
+    #[cfg(not(feature = "always_use_statm"))]
     if SMAPS_EXIST.load(Ordering::Relaxed) {
-        match fs::read_to_string(SMAPS) {
+        return match fs::read_to_string(SMAPS) {
             Ok(smap_info) => {
                 // smaps returns a list of different areas of memory
                 // and the sizes of each, in kB. smaps_rollup doesn't
@@ -60,25 +62,39 @@ pub fn memory_stats() -> Option<MemoryStats> {
                 })
             }
             Err(_) => None,
-        }
-    } else {
-        match fs::read_to_string(STATM) {
-            Ok(statm_info) => {
-                // statm returns the virtual size and rss, in
-                // multiples of the page size, as the first
-                // two columns of output.
+        };
+    }
 
-                let page_size = PAGE_SIZE.load(Ordering::Relaxed);
-                let (total_size_pages, idx) = scan_int(&statm_info);
-                let (total_rss_pages, _) = scan_int(&statm_info[idx..]);
-                Some(MemoryStats {
-                    physical_mem: total_rss_pages * page_size,
-                    virtual_mem: total_size_pages * page_size,
-                })
-            }
-            Err(_) => None,
+    match fs::read_to_string(STATM) {
+        Ok(statm_info) => {
+            // statm returns the virtual size and rss, in
+            // multiples of the page size, as the first
+            // two columns of output.
+
+            let page_size = PAGE_SIZE.load(Ordering::Relaxed);
+            let (total_size_pages, idx) = scan_int(&statm_info);
+            let (total_rss_pages, _) = scan_int(&statm_info[idx..]);
+            Some(MemoryStats {
+                physical_mem: total_rss_pages * page_size,
+                virtual_mem: total_size_pages * page_size,
+            })
+        }
+        Err(_) => None,
+    }
+}
+
+/// Grabs the value of the SC_PAGESIZE if needed.
+fn load_page_size() -> Option<()> {
+    if PAGE_SIZE.load(Ordering::Relaxed) == 0 {
+        let page_size = unsafe { libc::sysconf(libc::_SC_PAGESIZE) };
+        if page_size == -1 {
+            // sysconf returned error
+            return None;
+        } else {
+            PAGE_SIZE.store(page_size as usize, Ordering::Relaxed);
         }
     }
+    Some(())
 }
 
 /// Extracts a positive integer from a string that
@@ -94,7 +110,7 @@ fn scan_int(string: &str) -> (usize, usize) {
     }
     for n in chars {
         idx += 1;
-        if ('0'..='9').contains(&n) {
+        if n.is_ascii_digit() {
             out *= 10;
             out += n as usize - '0' as usize;
         } else {
