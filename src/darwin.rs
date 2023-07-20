@@ -7,7 +7,6 @@ use libc::{
 
 use crate::MemoryStats;
 
-/// Returns the data as bytes
 pub fn memory_stats() -> Option<MemoryStats> {
     let mut maybe_taskinfo = MaybeUninit::<mach_task_basic_info_data_t>::uninit();
     let mut count = MACH_TASK_BASIC_INFO_COUNT;
