@@ -68,14 +68,14 @@ mod platform {
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct MemoryStats {
-    /// The "physical" memory used by this process.
+    /// The "physical" memory used by this process, in bytes.
     /// This corresponds to the following
     /// metric on each platform:
     /// - **Linux, Android, MacOS, iOS**: Resident Set Size
     /// - **Windows**: Working Set
     pub physical_mem: usize,
 
-    /// The "virtual" memory used by this process.
+    /// The "virtual" memory used by this process, in bytes.
     /// This corresponds to the following
     /// metric on each platform:
     /// - **Linux, Android, MacOS, iOS**: Virtual Size
