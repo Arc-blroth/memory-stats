@@ -6,6 +6,7 @@ use winapi::um::psapi::{GetProcessMemoryInfo, PROCESS_MEMORY_COUNTERS};
 
 use crate::MemoryStats;
 
+/// Returns the data as bytes
 pub fn memory_stats() -> Option<MemoryStats> {
     let mut maybe_pmc = MaybeUninit::<PROCESS_MEMORY_COUNTERS>::uninit();
     match unsafe {
