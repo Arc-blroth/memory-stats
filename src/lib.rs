@@ -73,6 +73,7 @@ pub struct MemoryStats {
     /// metric on each platform:
     /// - **Linux, Android, MacOS, iOS**: Resident Set Size
     /// - **Windows**: Working Set
+    /// Data is in bytes
     pub physical_mem: usize,
 
     /// The "virtual" memory used by this process.
@@ -80,6 +81,7 @@ pub struct MemoryStats {
     /// metric on each platform:
     /// - **Linux, Android, MacOS, iOS**: Virtual Size
     /// - **Windows**: Pagefile Usage
+    /// Data is in bytes
     pub virtual_mem: usize,
 }
 
