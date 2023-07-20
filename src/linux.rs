@@ -13,6 +13,7 @@ static SMAPS_CHECKED: AtomicBool = AtomicBool::new(false);
 static SMAPS_EXIST: AtomicBool = AtomicBool::new(false);
 static PAGE_SIZE: AtomicUsize = AtomicUsize::new(0);
 
+/// Returns the data as bytes
 pub fn memory_stats() -> Option<MemoryStats> {
     // If possible, we try to use /proc/self/smaps to retrieve
     // accurate memory usage, but it's not avaliable on all
