@@ -16,7 +16,7 @@ serde = { version = "1.0", optional = true, features = ["derive"] }
 [target.'cfg(target_os = "windows")'.dependencies]
 winapi = { version = "0.3.9", features = ["minwindef", "processthreadsapi", "psapi"] }
 
-[target.'cfg(any(target_os = "linux", target_os = "android", target_os = "macos", target_os = "ios"))'.dependencies]
+[target.'cfg(any(target_os = "linux", target_os = "android", target_os = "macos", target_os = "ios", target_os = "freebsd"))'.dependencies]
 libc = "0.2"
 
 [features]

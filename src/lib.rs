@@ -58,12 +58,17 @@ mod platform;
 #[path = "darwin.rs"]
 mod platform;
 
+#[cfg(target_os = "freebsd")]
+#[path = "freebsd.rs"]
+mod platform;
+
 #[cfg(not(any(
     target_os = "windows",
     target_os = "linux",
     target_os = "android",
     target_os = "macos",
     target_os = "ios",
+    target_os = "freebsd",
 )))]
 mod platform {
     use crate::MemoryStats;
