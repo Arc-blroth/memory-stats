@@ -4,6 +4,10 @@ use winapi::shared::minwindef::DWORD;
 use winapi::um::processthreadsapi::GetCurrentProcess;
 use winapi::um::psapi::{GetProcessMemoryInfo, PROCESS_MEMORY_COUNTERS};
 
+use windows_sys::Win32::System::Threading::GetCurrentProcess;
+use windows_sys::Win32::System::ProcessStatus::GetProcessMemoryInfo;
+use windows_sys::Win32::System::ProcessStatus::PROCESS_MEMORY_COUNTERS;
+
 use crate::MemoryStats;
 
 pub fn memory_stats() -> Option<MemoryStats> {
