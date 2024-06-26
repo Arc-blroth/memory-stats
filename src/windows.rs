@@ -1,7 +1,6 @@
 use std::mem::MaybeUninit;
 
-use windows_sys::Win32::System::ProcessStatus::GetProcessMemoryInfo;
-use windows_sys::Win32::System::ProcessStatus::PROCESS_MEMORY_COUNTERS;
+use windows_sys::Win32::System::ProcessStatus::{GetProcessMemoryInfo, PROCESS_MEMORY_COUNTERS};
 use windows_sys::Win32::System::Threading::GetCurrentProcess;
 
 use crate::MemoryStats;
