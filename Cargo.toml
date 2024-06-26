@@ -2,7 +2,7 @@
 name = "memory-stats"
 authors = ["Arc-blroth <45273859+Arc-blroth@users.noreply.github.com>"]
 license = "MIT OR Apache-2.0"
-version = "1.1.0"
+version = "1.2.0"
 edition = "2021"
 description = "A cross-platform memory profiler for Rust."
 repository = "https://github.com/Arc-blroth/memory-stats"

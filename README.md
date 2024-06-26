@@ -16,7 +16,7 @@ Add `memory-stats` as a dependency to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-memory-stats = "1.0.0"
+memory-stats = "1.2.0"
 ```
 
 ### Optional Features
